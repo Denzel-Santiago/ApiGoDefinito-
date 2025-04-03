@@ -21,11 +21,12 @@ func NewMysqlUsuarioRepository() domain.IUsuario {
 
 func (mysql *MysqlUsuario) Save(usuario entities.Usuario) error {
 	result, err := mysql.conn.Exec(
-		"INSERT INTO usuarios (nombre, apellido, plataforma, correo_electronico, deleted) VALUES (?, ?, ?, ?, ?)",
+		`INSERT INTO usuarios (nombre, apellido, plataforma, correo_electronico, password, deleted) VALUES (?, ?, ?, ?, ?, ?)`,
 		usuario.Nombre,
 		usuario.Apellido,
 		usuario.Plataforma,
 		usuario.CorreoElectronico,
+		usuario.Password, // 🔥 Ahora guardamos la contraseña
 		usuario.Deleted,
 	)
 	if err != nil {
@@ -45,14 +46,16 @@ func (mysql *MysqlUsuario) Save(usuario entities.Usuario) error {
 
 func (mysql *MysqlUsuario) Update(id int, usuario entities.Usuario) error {
 	result, err := mysql.conn.Exec(
-		"UPDATE usuarios SET nombre = ?, apellido = ?, plataforma = ?, correo_electronico = ?, deleted = ? WHERE id = ?",
+		`UPDATE usuarios SET nombre = ?, apellido = ?, plataforma = ?, correo_electronico = ?, password = ?, deleted = ? WHERE id = ?`,
 		usuario.Nombre,
 		usuario.Apellido,
 		usuario.Plataforma,
 		usuario.CorreoElectronico,
+		usuario.Password, // 🔥 Ahora permite actualizar la contraseña
 		usuario.Deleted,
 		id,
 	)
+
 	if err != nil {
 		log.Println("Error al actualizar el usuario:", err)
 		return err

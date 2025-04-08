@@ -6,26 +6,15 @@ import (
 )
 
 type UpdateUsuario struct {
-	db              domain.IUsuario
-	passwordService PasswordService
+	db domain.IUsuario
 }
 
-func NewUpdateUsuario(db domain.IUsuario, passwordService PasswordService) *UpdateUsuario {
+func NewUpdateUsuario(db domain.IUsuario) *UpdateUsuario {
 	return &UpdateUsuario{
-		db:              db,
-		passwordService: passwordService,
+		db: db,
 	}
 }
 
 func (ue *UpdateUsuario) Execute(id int, usuario entities.Usuario) error {
-	// Si el usuario tiene una contraseña asignada, la codificamos
-	if usuario.GetPassword() != "" {
-		hashedPassword, err := ue.passwordService.Hash(usuario.GetPassword())
-		if err != nil {
-			return err
-		}
-		usuario.SetPassword(hashedPassword)
-	}
-
 	return ue.db.Update(id, usuario)
 }

@@ -6,19 +6,10 @@ type Usuario struct {
 	Apellido          string `json:"apellido"`
 	Plataforma        string `json:"plataforma"`
 	CorreoElectronico string `json:"correo_electronico"`
-	Password          string `json:"-"` // Ocultamos la contraseña en respuestas JSON
 	Deleted           bool   `json:"deleted"`
 }
 
-func (u *Usuario) SetPassword(password string) {
-	u.Password = password
-}
-
-func (u *Usuario) GetPassword() string {
-	return u.Password
-}
-
-// Constructor sin ID, ya que lo genera la BD
+// Constructor sin password
 func NewUsuario(nombre, apellido, plataforma, correoElectronico string, deleted bool) *Usuario {
 	return &Usuario{
 		Nombre:            nombre,

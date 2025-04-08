@@ -21,12 +21,11 @@ func NewMysqlUsuarioRepository() domain.IUsuario {
 
 func (mysql *MysqlUsuario) Save(usuario entities.Usuario) error {
 	result, err := mysql.conn.Exec(
-		`INSERT INTO usuarios (nombre, apellido, plataforma, correo_electronico, password, deleted) VALUES (?, ?, ?, ?, ?, ?)`,
+		`INSERT INTO usuarios (nombre, apellido, plataforma, correo_electronico, deleted) VALUES (?, ?, ?, ?, ?)`,
 		usuario.Nombre,
 		usuario.Apellido,
 		usuario.Plataforma,
 		usuario.CorreoElectronico,
-		usuario.Password, // 🔥 Ahora guardamos la contraseña
 		usuario.Deleted,
 	)
 	if err != nil {
@@ -46,12 +45,11 @@ func (mysql *MysqlUsuario) Save(usuario entities.Usuario) error {
 
 func (mysql *MysqlUsuario) Update(id int, usuario entities.Usuario) error {
 	result, err := mysql.conn.Exec(
-		`UPDATE usuarios SET nombre = ?, apellido = ?, plataforma = ?, correo_electronico = ?, password = ?, deleted = ? WHERE id = ?`,
+		`UPDATE usuarios SET nombre = ?, apellido = ?, plataforma = ?, correo_electronico = ?, deleted = ? WHERE id = ?`,
 		usuario.Nombre,
 		usuario.Apellido,
 		usuario.Plataforma,
 		usuario.CorreoElectronico,
-		usuario.Password, // 🔥 Ahora permite actualizar la contraseña
 		usuario.Deleted,
 		id,
 	)
@@ -68,7 +66,6 @@ func (mysql *MysqlUsuario) Update(id int, usuario entities.Usuario) error {
 	}
 
 	if rowsAffected == 0 {
-		log.Println("No se encontró el usuario con ID:", id)
 		return fmt.Errorf("usuario con ID %d no encontrado", id)
 	}
 

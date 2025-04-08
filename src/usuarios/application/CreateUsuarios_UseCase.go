@@ -6,28 +6,16 @@ import (
 )
 
 type CreateUsuarioUseCase struct {
-	db              domain.IUsuario
-	passwordService PasswordService
+	db domain.IUsuario
 }
 
-// Modificamos el constructor para recibir también el PasswordService
-func NewCreateUsuarioUseCase(db domain.IUsuario, passwordService PasswordService) *CreateUsuarioUseCase {
+func NewCreateUsuarioUseCase(db domain.IUsuario) *CreateUsuarioUseCase {
 	return &CreateUsuarioUseCase{
-		db:              db,
-		passwordService: passwordService,
+		db: db,
 	}
 }
 
 func (uc *CreateUsuarioUseCase) Run(usuario *entities.Usuario) (*entities.Usuario, error) {
-	// Si el usuario tiene una contraseña asignada, la codificamos
-	if usuario.GetPassword() != "" {
-		hashedPassword, err := uc.passwordService.Hash(usuario.GetPassword())
-		if err != nil {
-			return nil, err
-		}
-		usuario.SetPassword(hashedPassword)
-	}
-
 	err := uc.db.Save(*usuario)
 	return usuario, err
 }

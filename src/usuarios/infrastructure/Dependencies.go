@@ -1,4 +1,3 @@
-// mi-api-go/src/usuarios/infrastructure/dependencies.go
 package infrastructure
 
 import (
@@ -13,18 +12,15 @@ func InitUsuarioDependencies() (
 	*ViewAllUsuariosController,
 	*GetUsuariosByStatusController,
 ) {
-
 	repo := NewMysqlUsuarioRepository()
-	passwordService := NewBcryptService() // Inicializamos el servicio de codificación
 
-	createUseCase := application.NewCreateUsuarioUseCase(repo, passwordService) // Inyectamos el servicio de codificación
-	updateUseCase := application.NewUpdateUsuario(repo, passwordService)        // Inyectamos el servicio de codificación
+	createUseCase := application.NewCreateUsuarioUseCase(repo)
+	updateUseCase := application.NewUpdateUsuario(repo)
 	viewUseCase := application.NewViewUsuario(repo)
 	deleteUseCase := application.NewDeleteUsuarioUseCase(repo)
 	viewAllUseCase := application.NewViewAllUsuarios(repo)
 	getUsuariosBystatus := application.NewGetUsuariosByStatusUseCase(repo)
 
-	// Crear controladores
 	createController := NewCreateUsuarioController(createUseCase)
 	viewController := NewViewUsuarioController(viewUseCase)
 	updateController := NewUpdateUsuarioController(updateUseCase)
